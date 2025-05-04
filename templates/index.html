@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Song Recommendation System</h1>
+
+        <form method="POST" action="/" class="search-form">
+            <label for="song_name">Enter Song Name:</label>
+            <input type="text" id="song_name" name="song_name" placeholder="Search for a song..." required>
+            <button type="submit">Get Recommendations</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if recommendations is not none and not recommendations.empty %}
+            <h2>Recommendations for "{{ request.form['song_name'] }}":</h2>
+            <div class="recommendations">
+                {% for index, row in recommendations.iterrows() %}
+                    <div class="card">
+                        <h3>{{ row['song name'] }}</h3>
+                        <p><strong>Artist:</strong> {{ row['artist name'] }}</p>
+                        <p><strong>Similarity:</strong> {{ row['Similarity'] | round(3) }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% elif recommendations is not none %}
+            <p class="no-recommendations">No recommendations available for this song.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
