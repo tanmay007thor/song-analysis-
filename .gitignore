@@ -1,0 +1,29 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Data files (including large datasets)
+data/
+*.csv
+*.xlsx
+
+# Model files
+model/
+
+# Virtual environment
+venv/
+.env/
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Output folders
+outputs/
