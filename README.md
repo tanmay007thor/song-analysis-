@@ -1,86 +1,165 @@
-🎵 Song Recommendation System
-This project builds an unsupervised learning-based song recommendation system using neural embeddings and clustering. It leverages an autoencoder to reduce high-dimensional song features into a latent space, followed by KMeans clustering to group similar songs.
-![alt text](image/image.png)
-🚀 Features
-Dimensionality Reduction using a neural autoencoder
+# 🎵 Song Recommendation System
 
-Unsupervised Clustering with KMeans
+A deep learning-based **unsupervised song recommendation engine** that transforms audio features into neural embeddings using an **autoencoder**, and then clusters them using **KMeans** to discover hidden structure in music preferences. This project is designed to analyze the musical landscape and group similar tracks, enabling recommendation, playlist creation, or music discovery.
 
-Visual Cluster Exploration with Matplotlib
+![Flask UI Output](image/image.png)
 
-Preprocessed Audio Feature Input (e.g., tempo, energy, danceability)
-![alt text](<image/image (2).png>)
-🧠 Architecture Overview
-Data Preprocessing: Standardization of numerical features.
+---
 
-Autoencoder:
+## 🚀 Features
 
-Compresses 12 input features to a 6-dimensional latent space.
+* 🔍 **Dimensionality Reduction** via a deep autoencoder
+* 🎯 **Clustering** of latent features using KMeans
+* 📊 **Visualization** of musical clusters in latent space
+* 🎵 **Preprocessed Audio Feature Input** (tempo, energy, loudness, etc.)
+* 🖼️ Flask-based interactive UI for music exploration
+  ![Flask Page Preview](image/image%20\(2\).png)
 
-Reconstructs input for unsupervised learning using MSE loss.
+---
 
-Clustering:
+## 🧠 Technical Architecture
 
-Encoded features are clustered using KMeans (10 clusters).
+### **1. Data Preprocessing**
 
-Visualization:
+* Input dataset: `../data/preprocess.csv`
+* Selected Features:
 
-2D scatter plot of latent space with color-coded clusters.
+  ```
+  variance, Tempo, Loudness, Explicit, Popularity,
+  Energy, Danceability, Positiveness, Speechiness,
+  Liveness, Acousticness, Instrumentalness
+  ```
+* Features are standardized using `StandardScaler`.
 
-🧾 Dataset
-The model expects a CSV file located at:
+---
 
-bash
-Copy
-Edit
+### **2. Deep Autoencoder Model**
+
+* **Input dimension:** 12
+* **Latent (embedding) dimension:** 6
+* **Architecture:**
+
+  * Input → Dense(12, relu) → Dense(6, relu) → Dense(12, relu) → Output(12, linear)
+* **Loss Function:** Mean Squared Error (MSE)
+* **Optimizer:** Adam
+* **Training:**
+
+  * `Epochs`: 20
+  * `Batch Size`: 32
+  * `Validation Split`: 10%
+
+#### ✅ **Performance Metrics**
+
+* Final **Reconstruction MSE**: `0.1217`
+* Training Loss: `0.1218`
+* Validation Loss: `0.1190`
+
+> Since this is an unsupervised model, standard classification accuracy is not applicable. However, **MSE** is used to gauge reconstruction quality.
+
+---
+
+### **3. Clustering**
+
+* Encoded data from autoencoder is clustered using `KMeans(n_clusters=10)`
+* Each song is assigned a **cluster label** representing a group of musically similar tracks.
+
+---
+
+### **4. Visualization**
+
+* A 2D scatter plot of the latent space is created with cluster coloring:
+  ![Latent Cluster Visualization](image.png)
+
+---
+
+## 🧾 Dataset
+
+The dataset should be saved as:
+
+```
 ../data/preprocess.csv
-Required Columns:
-variance, Tempo, Loudness, Explicit, Popularity
+```
 
-Energy, Danceability, Positiveness, Speechiness
+### 📌 Required Columns:
 
-Liveness, Acousticness, Instrumentalness
+* `variance`, `Tempo`, `Loudness`, `Explicit`, `Popularity`
+* `Energy`, `Danceability`, `Positiveness`, `Speechiness`
+* `Liveness`, `Acousticness`, `Instrumentalness`
 
-🛠️ Requirements
-Python 3.7+
+---
 
-TensorFlow 2.x
+## 🎵 **Genre-Emotion to Features Mapping**
 
-scikit-learn
+| Genre       | Emotion(s)                | Energy | Danceability | Positiveness | Speechiness | Liveness | Acousticness | Instrumentalness |
+| ----------- | ------------------------- | ------ | ------------ | ------------ | ----------- | -------- | ------------ | ---------------- |
+| Pop         | joy, love, sadness        | High   | High         | High         | Medium      | Low      | Medium       | Low              |
+| Rock        | joy, anger, love          | High   | Medium       | Medium       | Low         | Medium   | Medium       | Low              |
+| Hip Hop     | anger, joy, love          | High   | Medium       | Medium       | High        | Low      | Low          | Low              |
+| Indie       | sadness, love, joy        | Medium | High         | Medium       | Low         | Medium   | High         | Low              |
+| Dance       | joy, love, excitement     | High   | High         | High         | Low         | Low      | Low          | Low              |
+| Rap         | anger, pride, confidence  | High   | Medium       | Low          | High        | Low      | Low          | Low              |
+| R\&B        | love, sadness, desire     | Medium | Medium       | Medium       | High        | Low      | Low          | Low              |
+| Electronic  | joy, energy, excitement   | High   | High         | High         | Medium      | Low      | Low          | Low              |
+| Soul        | love, nostalgia           | Low    | Low          | Medium       | Low         | High     | High         | Low              |
+| Alternative | sadness, melancholy       | Medium | Medium       | Medium       | Medium      | Low      | High         | Medium           |
+| Metal       | anger, despair            | High   | Low          | Low          | Low         | Low      | Low          | High             |
+| Classical   | awe, peace, sadness       | Low    | Low          | Low          | Low         | High     | High         | Low              |
+| Jazz        | calm, contentment         | Low    | Low          | Medium       | Low         | High     | High         | Medium           |
+| Country     | heartbreak, reflection    | Medium | Medium       | Medium       | Low         | Low      | High         | Low              |
+| Folk        | thoughtfulness, nostalgia | Low    | Low          | Medium       | Low         | High     | High         | Low              |
 
-pandas
+---
 
-numpy
+## 🛠️ Requirements
 
-matplotlib
+| Tool         | Version |
+| ------------ | ------- |
+| Python       | 3.11.9  |
+| pip          | 24.0    |
+| TensorFlow   | 2.x     |
+| scikit-learn | latest  |
+| pandas       | latest  |
+| numpy        | latest  |
+| matplotlib   | latest  |
 
-Install dependencies:
+Install via:
 
-bash
-Copy
-Edit
+```bash
 pip install tensorflow scikit-learn pandas numpy matplotlib
-📊 Usage
-Run the main script to:
+```
 
-Train the autoencoder
+---
 
-Encode and cluster the song data
+## 📊 Usage
 
-Visualize the results
+Run the project script to train and visualize:
 
-bash
-Copy
-Edit
+```bash
 python main.py
-📈 Output
-A scatter plot of the clustered latent space.
+```
 
-Cluster labels added to the original dataset for further use (e.g., recommendation logic).
+### Script Flow:
 
-🧩 Potential Improvements
-Add a song lookup and recommendation API
+* ✅ Train the autoencoder on audio features
+* 🧠 Extract latent embeddings
+* 🔁 Perform KMeans clustering
+* 📈 Visualize cluster distribution
 
-Integrate with Spotify API for dynamic feature retrieval
+---
 
-Use t-SNE or UMAP for better 2D visualization
+## 📈 Output
+
+* 📍 Cluster assignments saved to the dataset
+* 🎨 Visual 2D scatter plot of latent song clusters
+* 🌐 Flask UI for exploring clusters (optional image outputs above)
+
+---
+
+## 🧩 Potential Improvements
+
+* 🔌 Add RESTful API for track lookup and cluster-based recommendations
+* 🎧 Integrate with Spotify API for real-time track data
+* 📉 Apply t-SNE or UMAP for higher-fidelity dimensionality reduction and plotting
+* 🗂️ Build personalized playlists from user-cluster interactions
+
+ 
